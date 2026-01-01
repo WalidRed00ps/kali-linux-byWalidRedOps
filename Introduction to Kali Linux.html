@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WalidRedOps | Kali Linux Mastery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== BASE STYLES ===== */
+        :root {
+            --hacker-green: #00ff00;
+            --hacker-cyan: #00ffff;
+            --hacker-purple: #9d00ff;
+            --hacker-red: #ff0033;
+            --terminal-bg: #0a0a0a;
+            --terminal-text: #00ff00;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --light-bg: #111;
+            --border-color: #333;
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--hacker-green);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.03) 0%, transparent 20%);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4 {
+            color: var(--hacker-cyan);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            text-shadow: 0 0 10px var(--hacker-cyan);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--hacker-green), transparent);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-left: 4px solid var(--hacker-green);
+            padding-left: 15px;
+            margin-top: 40px;
+            position: relative;
+        }
+        
+        h2:before {
+            content: '#';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--hacker-purple);
+            font-weight: bold;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--hacker-purple);
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+        }
+        
+        /* ===== NAVIGATION & LAYOUT ===== */
+        header {
+            background-color: rgba(5, 5, 5, 0.97);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--hacker-green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--hacker-purple);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .logo span {
+            color: var(--hacker-cyan);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: var(--hacker-green);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--hacker-cyan);
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+        
+        .nav-links a.active {
+            color: var(--hacker-cyan);
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .nav-links a.active:before {
+            content: '>';
+            position: absolute;
+            left: -12px;
+            color: var(--hacker-green);
+            font-weight: bold;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--hacker-green);
+        }
+        
+        /* ===== MAIN CONTENT AREA ===== */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            padding: 30px 0 60px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page-content.active {
+            display: block;
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: linear-gradient(rgba(5, 5, 5, 0.95), rgba(10, 10, 10, 0.95));
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 255, 0, 0.03) 50%, transparent 51%),
+                linear-gradient(transparent 49%, rgba(0, 255, 0, 0.03) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 10px var(--hacker-cyan), 0 0 20px var(--hacker-cyan);
+            }
+            to { 
+                text-shadow: 0 0 15px var(--hacker-green), 0 0 30px var(--hacker-green), 0 0 40px var(--hacker-cyan);
+            }
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+        
+        .typewriter-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            position: relative;
+            min-height: 150px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .typewriter-container:before {
+            content: 'root@kali:~#';
+            position: absolute;
+            top: -18px;
+            left: 20px;
+            color: var(--hacker-purple);
+            font-weight: bold;
+            background-color: var(--dark-bg);
+            padding: 0 10px;
+            font-size: 0.9rem;
+        }
+        
+        .typewriter-text {
+            font-size: 1.2rem;
+            color: var(--terminal-text);
+            line-height: 1.6;
+            min-height: 100px;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: var(--hacker-green);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background: transparent;
+            color: var(--hacker-green);
+            padding: 14px 30px;
+            border: 1px solid var(--hacker-green);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            border-color: var(--hacker-cyan);
+            color: var(--hacker-cyan);
+        }
+        
+        .btn-primary:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+        
+        /* ===== CONTENT SECTIONS ===== */
+        .content-section {
+            background-color: rgba(10, 10, 10, 0.7);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .content-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--hacker-purple), var(--hacker-cyan));
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .section-title {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--hacker-green), transparent);
+            margin-top: 10px;
+        }
+        
+        /* ===== BOOT PROCESS VISUALIZATION ===== */
+        .boot-process {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .boot-stage {
+            background-color: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .boot-stage:hover {
+            border-color: var(--hacker-green);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .boot-stage.active {
+            border-color: var(--hacker-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            background-color: rgba(10, 20, 30, 0.8);
+        }
+        
+        .boot-stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .boot-stage-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--hacker-purple);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        
+        .boot-stage-title {
+            font-size: 1.3rem;
+            color: var(--hacker-cyan);
+            flex-grow: 1;
+        }
+        
+        .boot-stage-arrow {
+            color: var(--hacker-green);
+            font-size: 1.5rem;
+            margin: 0 15px;
+        }
+        
+        .boot-stage-content {
+            display: none;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 255, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .boot-stage.active .boot-stage-content {
+            display: block;
+        }
+        
+        /* ===== COMMAND CARDS ===== */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .command-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .command-card:hover {
+            border-color: var(--hacker-green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 0, 0.15);
+        }
+        
+        .command-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--hacker-purple);
+        }
+        
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .command-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--hacker-cyan);
+        }
+        
+        .command-category {
+            background-color: rgba(0, 255, 255, 0.1);
+            color: var(--hacker-cyan);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .command-desc {
+            color: #ccc;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+        
+        .command-example {
+            background-color: var(--terminal-bg);
+            color: var(--terminal-text);
+            padding: 18px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--hacker-green);
+            position: relative;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 255, 0, 0.1);
+            color: var(--hacker-green);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .copy-btn:hover {
+            background-color: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .command-output {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #aaa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--hacker-purple);
+            display: none;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+        
+        .show-output {
+            background: transparent;
+            color: var(--hacker-cyan);
+            border: 1px solid var(--hacker-cyan);
+            padding: 8px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+        
+        .show-output:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        /* ===== PRACTICAL LABS ===== */
+        .lab-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .lab-card {
+            background-color: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lab-card:hover {
+            border-color: var(--hacker-cyan);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .lab-card:before {
+            content: 'LAB';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 255, 255, 0.1);
+            color: var(--hacker-cyan);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .lab-title {
+            font-size: 1.4rem;
+            color: var(--hacker-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .lab-title i {
+            color: var(--hacker-purple);
+        }
+        
+        .lab-desc {
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .lab-tasks {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .lab-task {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #ddd;
+        }
+        
+        .lab-task:before {
+            content: '>';
+            position: absolute;
+            left: 5px;
+            color: var(--hacker-green);
+            font-weight: bold;
+        }
+        
+        .lab-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .lab-checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--hacker-green);
+        }
+        
+        /* ===== FOOTER ===== */
+        footer {
+            background-color: rgba(5, 5, 5, 0.95);
+            padding: 50px 0 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            color: var(--hacker-green);
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            list-style: none;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--hacker-green);
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1100px) {
+            .commands-grid {
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            }
+            
+            .lab-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: rgba(5, 5, 5, 0.98);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 20px 0;
+                border-top: 1px solid var(--border-color);
+                z-index: 999;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 12px 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .typewriter-container {
+                padding: 20px 15px;
+            }
+            
+            .content-section {
+                padding: 20px 15px;
+            }
+            
+            .command-card {
+                padding: 20px;
+            }
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .text-cyan {
+            color: var(--hacker-cyan);
+        }
+        
+        .text-green {
+            color: var(--hacker-green);
+        }
+        
+        .text-purple {
+            color: var(--hacker-purple);
+        }
+        
+        .text-red {
+            color: var(--hacker-red);
+        }
+        
+        .mt-30 {
+            margin-top: 30px;
+        }
+        
+        .mb-30 {
+            margin-bottom: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .info-box {
+            background-color: rgba(0, 40, 80, 0.2);
+            border-left: 4px solid var(--hacker-cyan);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box {
+            background-color: rgba(80, 40, 0, 0.2);
+            border-left: 4px solid var(--hacker-red);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .code-block {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* ===== SEARCH BAR ===== */
+        .search-container {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 8px;
+            color: var(--hacker-green);
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--hacker-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--hacker-green);
+            font-size: 1.2rem;
+        }
+        
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--hacker-purple), var(--hacker-cyan));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER & NAVIGATION ===== -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo" data-page="home">
+                    <i class="fas fa-terminal"></i>
+                    Walid<span>RedOps</span>
+                </a>
+                <div class="menu-toggle" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" data-page="home" class="active">Home</a></li>
+                    <li><a href="#" data-page="fundamentals">Kali Fundamentals</a></li>
+                    <li><a href="#" data-page="boot-process">Boot Process</a></li>
+                    <li><a href="#" data-page="package-manager">Package Manager</a></li>
+                    <li><a href="#" data-page="commands">Commands</a></li>
+                    <li><a href="#" data-page="labs">Practical Labs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT AREA ===== -->
+    <main class="container">
+        
+        <!-- ===== HOME PAGE ===== -->
+        <div id="home" class="page-content active">
+            <section class="hero">
+                <h1>WalidRedOps | Kali Linux Mastery</h1>
+                <p>The ultimate interactive training platform for Kali Linux and ethical hacking. Master penetration testing from fundamentals to advanced exploitation techniques.</p>
+                
+                <div class="typewriter-container">
+                    <div id="typewriter-text" class="typewriter-text"></div>
+                    <div class="cursor"></div>
+                </div>
+                
+                <div class="btn-container">
+                    <a href="#" class="btn btn-primary" data-page="fundamentals">
+                        <i class="fas fa-book"></i> Start Learning
+                    </a>
+                    <a href="#" class="btn" data-page="commands">
+                        <i class="fas fa-terminal"></i> Command Reference
+                    </a>
+                    <a href="#" class="btn" data-page="labs">
+                        <i class="fas fa-flask"></i> Practical Labs
+                    </a>
+                </div>
+            </section>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Training Progress</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+            </div>
+            
+            <section class="content-section">
+                <h2 class="section-title">About This Platform</h2>
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <h3><i class="fas fa-crosshairs text-cyan"></i> Mission Statement</h3>
+                        <p>WalidRedOps provides comprehensive, hands-on training in Kali Linux and ethical hacking methodologies. Our platform bridges the gap between theoretical knowledge and practical skills required for professional penetration testing.</p>
+                    </div>
+                    <div class="flex-item">
+                        <h3><i class="fas fa-shield-alt text-green"></i> Ethical Focus</h3>
+                        <p>All content is designed for educational purposes within authorized testing environments. We emphasize legal compliance, responsible disclosure, and ethical hacking principles throughout our training materials.</p>
+                    </div>
+                </div>
+                
+                <div class="info-box mt-30">
+                    <h4><i class="fas fa-exclamation-triangle text-purple"></i> Legal Disclaimer</h4>
+                    <p>Only use the techniques and tools demonstrated here on systems you own or have explicit written permission to test. Unauthorized access to computer systems is a criminal offense in most jurisdictions.</p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- ===== KALI FUNDAMENTALS PAGE ===== -->
+        <div id="fundamentals" class="page-content">
+            <section class="content-section">
+                <h2 class="section-title">Kali Linux Fundamentals</h2>
+                
+                <h3><i class="fas fa-question-circle text-cyan"></i> What is Kali Linux?</h3>
+                <p>Kali Linux is a <span class="text-green">Debian-based Linux distribution</span> specifically designed for digital forensics and penetration testing. It comes pre-installed with over 600 security and forensics tools, making it the go-to platform for security professionals and ethical hackers.</p>
+                
+                <div class="flex-container mt-30">
+                    <div class="flex-item">
+                        <h4><i class="fas fa-history text-purple"></i> History of Kali Linux</h4>
+                        <ul>
+                            <li><strong>2004:</strong> BackTrack Linux was released - the predecessor to Kali</li>
+                            <li><strong>2013:</strong> Kali Linux 1.0 launched, replacing BackTrack</li>
+                            <li><strong>2015:</strong> Kali 2.0 released with rolling updates</li>
+                            <li><strong>2016-Present:</strong> Continuous development with quarterly releases</li>
+                            <li><strong>Key Fact:</strong> Developed and maintained by Offensive Security</li>
+                        </ul>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fas fa-sitemap text-green"></i> What is Debian?</h4>
+                        <p>Debian is one of the oldest and most stable Linux distributions. It serves as the foundation for many other distributions (including Kali, Ubuntu, and Mint). Debian is known for its:</p>
+                        <ul>
+                            <li>Strict open-source policy</li>
+                            <li>Extensive package repositories (over 59,000 packages)</li>
+                            <li>Robust package management system (APT)</li>
+                            <li>Stable release cycle</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3 class="mt-30"><i class="fas fa-desktop text-cyan"></i> Debian-Based Distributions</h3>
+                <div class="code-block">
+                    <span class="text-green"># Major Debian-based distributions:</span><br>
+                    - Kali Linux (Security Testing)<br>
+                    - Ubuntu (Desktop/Server)<br>
+                    - Linux Mint (Desktop)<br>
+                    - Parrot OS (Security/Privacy)<br>
+                    - Elementary OS (Desktop)<br>
+                    - Tails (Privacy/Anonymity)
+                </div>
+                
+                <h3 class="mt-30"><i class="fas fa-check-circle text-green"></i> Why Use Kali Linux?</h3>
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <h4><i class="fas fa-tools"></i> Pre-Installed Tools</h4>
+                        <p>Comes with 600+ security tools for penetration testing, forensics, and reverse engineering.</p>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fas fa-sync-alt"></i> Rolling Release</h4>
+                        <p>Continuous updates ensure you always have the latest security tools and kernel.</p>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fas fa-users-cog"></i> Custom Kernel</h4>
+                        <p>Patched for injection support (wireless and network).</p>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fas fa-shield-alt"></i> Secure by Default</h4>
+                        <p>Network services disabled by default, non-root user with sudo privileges.</p>
+                    </div>
+                </div>
+                
+                <div class="warning-box mt-30">
+                    <h4><i class="fas fa-exclamation-triangle text-red"></i> Important Considerations</h4>
+                    <p>Kali Linux is designed as a <span class="text-red">specialist tool</span>, not a general-purpose operating system. It's optimized for security assessments and may not be suitable for daily desktop use due to its specialized configuration and security-focused defaults.</p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- ===== BOOT PROCESS PAGE ===== -->
+        <div id="boot-process" class="page-content">
+            <section class="content-section">
+                <h2 class="section-title">Kali Linux Boot Process</h2>
+                <p>Understanding the boot process is essential for troubleshooting and forensic analysis. Here's the complete journey from power-on to login prompt:</p>
+                
+                <div class="boot-process">
+                    <!-- Stage 1: BIOS/UEFI -->
+                    <div class="boot-stage active">
+                        <div class="boot-stage-header">
+                            <div class="boot-stage-number">1</div>
+                            <div class="boot-stage-title">BIOS / UEFI Initialization</div>
+                        </div>
+                        <div class="boot-stage-content">
+                            <p><strong>BIOS (Basic Input/Output System)</strong> or <strong>UEFI (Unified Extensible Firmware Interface)</strong> is the first software that runs when you power on your computer.</p>
+                            <div class="code-block">
+                                <span class="text-green"># BIOS Responsibilities:</span><br>
+                                - Power-On Self-Test (POST)<br>
+                                - Initialize hardware (CPU, RAM, storage)<br>
+                                - Locate bootable devices<br>
+                                - Load bootloader from MBR (BIOS) or GPT (UEFI)
+                            </div>
+                            <p><strong>UEFI advantages:</strong> Faster boot, secure boot, support for drives >2TB, GUI interface.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Stage 2: Bootloader -->
+                    <div class="boot-stage">
+                        <div class="boot-stage-header">
+                            <div class="boot-stage-number">2</div>
+                            <div class="boot-stage-title">GRUB Bootloader</div>
+                        </div>
+                        <div class="boot-stage-content">
+                            <p><strong>GRUB (GRand Unified Bootloader)</strong> is the default bootloader for most Linux distributions including Kali.</p>
+                            <div class="code-block">
+                                <span class="text-green"># GRUB Configuration File:</span><br>
+                                <span class="text-purple">/boot/grub/grub.cfg</span> (auto-generated)<br>
+                                <span class="text-purple">/etc/default/grub</span> (user configuration)<br><br>
+                                <span class="text-green"># Regenerate GRUB config after changes:</span><br>
+                                sudo update-grub
+                            </div>
+                            <p>GRUB loads the Linux kernel and initial RAM disk (initrd/initramfs) into memory and passes control to the kernel.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Stage 3: Kernel -->
+                    <div class="boot-stage">
+                        <div class="boot-stage-header">
+                            <div class="boot-stage-number">3</div>
+                            <div class="boot-stage-title">Linux Kernel Initialization</div>
+                        </div>
+                        <div class="boot-stage-content">
+                            <p>The <strong>Linux Kernel</strong> is the core of the operating system that manages hardware resources and system processes.</p>
+                            <div class="code-block">
+                                <span class="text-green"># Kernel Responsibilities:</span><br>
+                                - Initialize remaining hardware<br>
+                                - Mount the root filesystem<br>
+                                - Decompress initramfs<br>
+                                - Start the init process (PID 1)
+                            </div>
+                            <p>Kali uses a <span class="text-green">patched kernel</span> with additional drivers for wireless injection and packet forging.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Stage 4: Systemd -->
+                    <div class="boot-stage">
+                        <div class="boot-stage-header">
+                            <div class="boot-stage-number">4</div>
+                            <div class="boot-stage-title">Systemd & Service Management</div>
+                        </div>
+                        <div class="boot-stage-content">
+                            <p><strong>Systemd</strong> is the init system and service manager that replaces the traditional SysV init. It's responsible for starting and managing system services.</p>
+                            <div class="code-block">
+                                <span class="text-green"># Systemd key commands:</span><br>
+                                sudo systemctl start service_name<br>
+                                sudo systemctl stop service_name<br>
+                                sudo systemctl enable service_name<br>
+                                sudo systemctl status service_name<br><br>
+                                <span class="text-green"># Check boot time:</span><br>
+                                systemd-analyze blame
+                            </div>
+                            <p>Systemd starts services in parallel, significantly improving boot times compared to sequential SysV init.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Stage 5: Login -->
+                    <div class="boot-stage">
+                        <div class="boot-stage-header">
+                            <div class="boot-stage-number">5</div>
+                            <div class="boot-stage-title">Login & Desktop Environment</div>
+                        </div>
+                        <div class="boot-stage-content">
+                            <p>Finally, the system starts the display manager (usually <strong>LightDM</strong> or <strong>GDM</strong>) which presents the login screen.</p>
+                            <div class="code-block">
+                                <span class="text-green"># Default Kali login:</span><br>
+                                Username: <span class="text-cyan">kali</span><br>
+                                Password: <span class="text-cyan">kali</span><br><br>
+                                <span class="text-green"># Root access:</span><br>
+                                sudo su -<br>
+                                # or<br>
+                                sudo -i
+                            </div>
+                            <p>After authentication, the desktop environment (Xfce by default) starts, and you have a fully functional Kali Linux system.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box mt-30">
+                    <h4><i class="fas fa-lightbulb text-cyan"></i> Boot Process Commands</h4>
+                    <div class="code-block">
+                        <span class="text-green"># View kernel messages from current boot:</span><br>
+                        dmesg | less<br><br>
+                        <span class="text-green"># View system boot log:</span><br>
+                        journalctl -b<br><br>
+                        <span class="text-green"># Check init system:</span><br>
+                        ps -p 1 -o comm=<br><br>
+                        <span class="text-green"># List available kernels:</span><br>
+                        ls -la /boot/
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- ===== PACKAGE MANAGER PAGE ===== -->
+        <div id="package-manager" class="page-content">
+            <section class="content-section">
+                <h2 class="section-title">Linux Package Manager</h2>
+                
+                <h3><i class="fas fa-box-open text-cyan"></i> What is a Package Manager?</h3>
+                <p>A <strong>package manager</strong> is a collection of software tools that automates the process of installing, upgrading, configuring, and removing software packages from a computer's operating system.</p>
+                
+                <div class="flex-container mt-30">
+                    <div class="flex-item">
+                        <h4><i class="fas fa-cogs text-green"></i> Key Functions</h4>
+                        <ul>
+                            <li><strong>Dependency Resolution:</strong> Automatically installs required libraries</li>
+                            <li><strong>Version Management:</strong> Handles software versions and updates</li>
+                            <li><strong>Repository Management:</strong> Connects to online software repositories</li>
+                            <li><strong>Verification:</strong> Checks package integrity with cryptographic signatures</li>
+                            <li><strong>Clean Removal:</strong> Removes packages and unused dependencies</li>
+                        </ul>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fas fa-star text-purple"></i> Why It's Essential</h4>
+                        <p>Without a package manager, you would need to:</p>
+                        <ul>
+                            <li>Manually download software from websites</li>
+                            <li>Resolve dependencies yourself</li>
+                            <li>Compile from source code</li>
+                            <li>Manually update each application</li>
+                            <li>Risk version conflicts and security issues</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3 class="mt-30"><i class="fas fa-terminal text-cyan"></i> APT - Advanced Package Tool</h3>
+                <p>Kali Linux uses <strong>APT (Advanced Package Tool)</strong>, the package manager from Debian. APT works with <strong>.deb</strong> packages and manages dependencies automatically.</p>
+                
+                <div class="code-block">
+                    <span class="text-green"># APT Command Structure:</span><br>
+                    sudo apt [command] [options] [package]<br><br>
+                    <span class="text-green"># Update package lists:</span><br>
+                    sudo apt update<br><br>
+                    <span class="text-green"># Upgrade installed packages:</span><br>
+                    sudo apt upgrade<br><br>
+                    <span class="text-green"># Full system upgrade:</span><br>
+                    sudo apt full-upgrade<br><br>
+                    <span class="text-green"># Install a package:</span><br>
+                    sudo apt install nmap<br><br>
+                    <span class="text-green"># Remove a package (keep config):</span><br>
+                    sudo apt remove nmap<br><br>
+                    <span class="text-green"># Remove package and config:</span><br>
+                    sudo apt purge nmap<br><br>
+                    <span class="text-green"># Search for packages:</span><br>
+                    apt search "penetration testing"<br><br>
+                    <span class="text-green"># Show package info:</span><br>
+                    apt show nmap<br><br>
+                    <span class="text-green"># List installed packages:</span><br>
+                    apt list --installed
+                </div>
+                
+                <h3 class="mt-30"><i class="fas fa-project-diagram text-purple"></i> Other Package Managers</h3>
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <h4><i class="fab fa-redhat text-red"></i> YUM/DNF (RHEL/Fedora)</h4>
+                        <div class="code-block">
+                            sudo yum install package<br>
+                            sudo dnf install package  <span class="text-green"># newer</span>
+                        </div>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fab fa-archlinux text-cyan"></i> Pacman (Arch Linux)</h4>
+                        <div class="code-block">
+                            sudo pacman -S package<br>
+                            sudo pacman -Syu  <span class="text-green"># update system</span>
+                        </div>
+                    </div>
+                    <div class="flex-item">
+                        <h4><i class="fab fa-suse text-green"></i> Zypper (openSUSE)</h4>
+                        <div class="code-block">
+                            sudo zypper install package<br>
+                            sudo zypper update
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="warning-box mt-30">
+                    <h4><i class="fas fa-exclamation-circle text-red"></i> Kali Repository Warning</h4>
+                    <p>Kali Linux uses its own specialized repositories. <span class="text-red">Do not add Ubuntu or other Debian repositories</span> to your Kali sources, as this will likely break your system due to package conflicts and incompatible versions.</p>
+                </div>
+                
+                <div class="info-box mt-30">
+                    <h4><i class="fas fa-code-branch text-cyan"></i> Package Management Files</h4>
+                    <div class="code-block">
+                        <span class="text-green"># APT configuration:</span><br>
+                        /etc/apt/sources.list  <span class="text-green"># Main repository list</span><br>
+                        /etc/apt/sources.list.d/  <span class="text-green"># Additional repos</span><br>
+                        /var/lib/apt/lists/  <span class="text-green"># Downloaded package lists</span><br>
+                        /var/cache/apt/archives/  <span class="text-green"># Downloaded .deb packages</span><br><br>
+                        <span class="text-green"># Clean package cache:</span><br>
+                        sudo apt clean  <span class="text-green"># Remove ALL cached packages</span><br>
+                        sudo apt autoclean  <span class="text-green"># Remove old versions only</span><br>
+                        sudo apt autoremove  <span class="text-green"># Remove unused dependencies</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- ===== COMMANDS PAGE ===== -->
+        <div id="commands" class="page-content">
+            <section class="content-section">
+                <h2 class="section-title">Kali Linux Command Reference</h2>
+                
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="command-search" class="search-box" placeholder="Search commands (e.g., 'nmap', 'permissions', 'network')...">
+                </div>
+                
+                <div class="commands-grid" id="commands-container">
+                    <!-- Commands will be dynamically loaded here -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <button id="load-more-commands" class="btn">
+                        <i class="fas fa-plus-circle"></i> Load More Commands
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- ===== PRACTICAL LABS PAGE ===== -->
+        <div id="labs" class="page-content">
+            <section class="content-section">
+                <h2 class="section-title">Practical Kali Linux Labs</h2>
+                <p>Apply your knowledge with these hands-on exercises. Complete each task and check them off as you progress.</p>
+                
+                <div class="lab-container" id="labs-container">
+                    <!-- Labs will be dynamically loaded here -->
+                </div>
+                
+                <div class="info-box mt-30">
+                    <h4><i class="fas fa-clipboard-check text-green"></i> Lab Completion Progress</h4>
+                    <p>Your progress is saved locally in your browser. Complete all labs to master Kali Linux fundamentals.</p>
+                    <div class="code-block">
+                        <span class="text-green"># To reset all lab progress:</span><br>
+                        localStorage.removeItem('walidredops-lab-progress');<br>
+                        location.reload();
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">WalidRedOps</div>
+            
+            <ul class="footer-links">
+                <li><a href="#" data-page="home">Home</a></li>
+                <li><a href="#" data-page="fundamentals">Fundamentals</a></li>
+                <li><a href="#" data-page="boot-process">Boot Process</a></li>
+                <li><a href="#" data-page="package-manager">Package Manager</a></li>
+                <li><a href="#" data-page="commands">Commands</a></li>
+                <li><a href="#" data-page="labs">Labs</a></li>
+            </ul>
+            
+            <div class="copyright">
+                &copy; 2026 WalidRedOps | Kali Linux Mastery Platform. For educational purposes only.
+            </div>
+            
+            <div class="copyright" style="font-size: 0.8rem; margin-top: 10px;">
+                <i class="fas fa-shield-alt"></i> Always obtain proper authorization before testing. Ethical hacking only.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== TYPING EFFECT =====
+        const typewriterText = document.getElementById('typewriter-text');
+        const texts = [
+            "Initializing WalidRedOps Kali Linux Mastery Platform...",
+            "Loading comprehensive training modules...",
+            "Compiling 600+ penetration testing tools database...",
+            "Establishing secure connection to training portal...",
+            "System ready. Type 'help' for available commands or navigate using the menu."
+        ];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isEnd = false;
+
+        function typeWriter() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typewriterText.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterText.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            if (!isDeleting && charIndex === currentText.length) {
+                isEnd = true;
+                isDeleting = true;
+                setTimeout(typeWriter, 3000); // Pause at end of text
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex++;
+                if (textIndex === texts.length) textIndex = 0;
+                setTimeout(typeWriter, 500);
+            } else {
+                const speed = isDeleting ? 30 : 80;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        // ===== COMPREHENSIVE COMMANDS DATABASE =====
+        const kaliCommands = [
+            // System Information Commands
+            {
+                name: "uname",
+                category: "System Info",
+                description: "Display system information. Essential for identifying OS type before running exploits.",
+                example: "uname -a",
+                output: "Linux kali 5.15.0-kali3-amd64 #1 SMP Debian 5.15.15-2kali1 (2022-01-31) x86_64 GNU/Linux",
+                tags: ["system", "info", "enumeration"]
+            },
+            {
+                name: "hostname",
+                category: "System Info",
+                description: "Show or set the system hostname. Useful for network identification.",
+                example: "hostname && hostname -I",
+                output: "kali\n192.168.1.105 10.0.2.15",
+                tags: ["system", "network", "hostname"]
+            },
+            {
+                name: "whoami",
+                category: "User Info",
+                description: "Display current username. Critical for privilege escalation assessment.",
+                example: "whoami",
+                output: "kali",
+                tags: ["user", "permissions", "enumeration"]
+            },
+            {
+                name: "cat /etc/os-release",
+                category: "System Info",
+                description: "Display OS identification data for precise fingerprinting.",
+                example: "cat /etc/os-release",
+                output: 'PRETTY_NAME="Kali GNU/Linux Rolling"\nNAME="Kali GNU/Linux"\nID=kali\nVERSION="2022.3"\nVERSION_ID="2022.3"',
+                tags: ["system", "os", "fingerprinting"]
+            },
+            {
+                name: "last reboot",
+                category: "System Info",
+                description: "Show system reboot history for forensic analysis.",
+                example: "last reboot | head -5",
+                output: "reboot   system boot  5.15.0-kali3-amd Wed Mar 15 10:30   still running\nreboot   system boot  5.15.0-kali3-amd Tue Mar 14 08:15 - 10:30  (02:15)",
+                tags: ["system", "logs", "forensics"]
+            },
+            {
+                name: "w",
+                category: "User Info",
+                description: "Show who is logged in and what they're doing.",
+                example: "w",
+                output: "10:45:30 up 1 day, 2:15, 3 users, load average: 0.08, 0.03, 0.01\nUSER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT\nkali     pts/0    192.168.1.50     10:30    5.00s  0.10s  0.01s w",
+                tags: ["user", "system", "monitoring"]
+            },
+            {
+                name: "history",
+                category: "Shell",
+                description: "Display command history. Can reveal attacker activities.",
+                example: "history | tail -10",
+                output: " 1001  nmap -sV 192.168.1.0/24\n 1002  msfconsole\n 1003  searchsploit apache 2.4\n 1004  hydra -l admin -p pass.txt ssh://192.168.1.10",
+                tags: ["shell", "history", "forensics"]
+            },
+            
+            // Hardware Information Commands
+            {
+                name: "lscpu",
+                category: "Hardware Info",
+                description: "Display CPU architecture information.",
+                example: "lscpu",
+                output: "Architecture:        x86_64\nCPU op-mode(s):      32-bit, 64-bit\nCPU(s):              8\nThread(s) per core:  2\nCore(s) per socket:  4",
+                tags: ["hardware", "cpu", "system"]
+            },
+            {
+                name: "lsblk",
+                category: "Hardware Info",
+                description: "List information about block devices (disks, partitions).",
+                example: "lsblk",
+                output: "NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT\nsda      8:0    0 465.8G  0 disk\n├─sda1   8:1    0   512M  0 part /boot/efi\n├─sda2   8:2    0   488M  0 part /boot\n└─sda3   8:3    0 464.8G  0 part /",
+                tags: ["hardware", "storage", "disks"]
+            },
+            {
+                name: "lshw",
+                category: "Hardware Info",
+                description: "List detailed hardware configuration (requires sudo).",
+                example: "sudo lshw -short",
+                output: "H/W path       Device      Class       Description\n================================================\n/0/0                       memory      64KiB BIOS\n/0/4                       processor   Intel Core i7-10750H\n/0/4/5                     memory      32KiB L1 cache",
+                tags: ["hardware", "system", "detailed"]
+            },
+            {
+                name: "dmidecode",
+                category: "Hardware Info",
+                description: "Display DMI (SMBIOS) table contents - hardware BIOS info.",
+                example: "sudo dmidecode -t system",
+                output: "System Information\n        Manufacturer: LENOVO\n        Product Name: 20Q6S1R600\n        Version: ThinkPad T14 Gen 1\n        Serial Number: PF2A1XYZ",
+                tags: ["hardware", "bios", "system"]
+            },
+            {
+                name: "free",
+                category: "Hardware Info",
+                description: "Display memory usage statistics.",
+                example: "free -h",
+                output: "              total        used        free      shared  buff/cache   available\nMem:            15Gi       2.3Gi        10Gi       345Mi       2.7Gi        12Gi\nSwap:          2.0Gi       0.0Ki        2.0Gi",
+                tags: ["hardware", "memory", "monitoring"]
+            },
+            {
+                name: "df",
+                category: "Hardware Info",
+                description: "Report file system disk space usage.",
+                example: "df -h",
+                output: "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda3       457G   25G  409G   6% /\ntmpfs           7.8G  1.7M  7.8G   1% /dev/shm",
+                tags: ["hardware", "storage", "disks"]
+            },
+            
+            // User Information & Management
+            {
+                name: "id",
+                category: "User Management",
+                description: "Display user and group information.",
+                example: "id",
+                output: "uid=1000(kali) gid=1000(kali) groups=1000(kali),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),109(netdev),118(bluetooth),133(scanner),142(kaboxer)",
+                tags: ["user", "permissions", "groups"]
+            },
+            {
+                name: "who",
+                category: "User Management",
+                description: "Show who is logged into the system.",
+                example: "who",
+                output: "kali     :0           2026-03-15 10:30 (:0)\nkali     pts/0        2026-03-15 10:31 (192.168.1.50)",
+                tags: ["user", "login", "system"]
+            },
+            {
+                name: "last",
+                category: "User Management",
+                description: "Show listing of last logged in users.",
+                example: "last -n 5",
+                output: "kali     pts/0        192.168.1.50     Wed Mar 15 10:31   still logged in\nkali     :0           :0               Wed Mar 15 10:30   still logged in\nreboot   system boot  5.15.0-kali3-amd Wed Mar 15 10:30   still running",
+                tags: ["user", "login", "security"]
+            },
+            {
+                name: "finger",
+                category: "User Management",
+                description: "User information lookup (may need installation).",
+                example: "finger kali",
+                output: "Login: kali           Name: Kali User\nDirectory: /home/kali             Shell: /bin/bash\nLast login Wed Mar 15 10:31 (EDT) on pts/0 from 192.168.1.50",
+                tags: ["user", "info", "details"]
+            },
+            {
+                name: "adduser",
+                category: "User Management",
+                description: "Add a new user to the system.",
+                example: "sudo adduser newuser",
+                output: "Adding user 'newuser' ...\nAdding new group 'newuser' (1001) ...\nAdding new user 'newuser' (1001) with group 'newuser' ...",
+                tags: ["user", "management", "admin"]
+            },
+            {
+                name: "passwd",
+                category: "User Management",
+                description: "Change user password.",
+                example: "passwd",
+                output: "Changing password for kali.\nCurrent password: \nNew password: \nRetype new password: \npasswd: password updated successfully",
+                tags: ["user", "security", "password"]
+            },
+            {
+                name: "usermod",
+                category: "User Management",
+                description: "Modify a user account.",
+                example: "sudo usermod -aG sudo newuser",
+                output: "", // Usually no output on success
+                tags: ["user", "management", "permissions"]
+            },
+            {
+                name: "userdel",
+                category: "User Management",
+                description: "Delete a user account.",
+                example: "sudo userdel -r olduser",
+                output: "", // Usually no output on success
+                tags: ["user", "management", "admin"]
+            },
+            
+            // Process Management Commands
+            {
+                name: "ps",
+                category: "Process Management",
+                description: "Report a snapshot of current processes.",
+                example: "ps aux | grep ssh",
+                output: "root       1254  0.0  0.5  65536  5676 ?        Ss   10:30   0:00 /usr/sbin/sshd -D\nkali      12345  0.0  0.2  31244  2345 pts/0    S+   11:30   0:00 grep --color=auto ssh",
+                tags: ["process", "management", "monitoring"]
+            },
+            {
+                name: "top",
+                category: "Process Management",
+                description: "Display Linux processes (interactive).",
+                example: "top",
+                output: "top - 11:35:15 up  1:05,  3 users,  load average: 0.08, 0.03, 0.01\nTasks: 245 total,   1 running, 244 sleeping,   0 stopped,   0 zombie\n%Cpu(s):  2.3 us,  1.5 sy,  0.0 ni, 96.0 id,  0.2 wa,  0.0 hi,  0.0 si,  0.0 st\nMiB Mem :  15982.2 total,  10240.1 free,   2345.6 used,   3396.5 buff/cache",
+                tags: ["process", "monitoring", "system"]
+            },
+            {
+                name: "htop",
+                category: "Process Management",
+                description: "Interactive process viewer (colorful, with mouse support).",
+                example: "htop",
+                output: "(Colorful interactive display of processes)",
+                tags: ["process", "monitoring", "interactive"]
+            },
+            {
+                name: "kill",
+                category: "Process Management",
+                description: "Send a signal to a process (default: TERM).",
+                example: "kill 1234",
+                output: "", // Usually no output on success
+                tags: ["process", "management", "terminate"]
+            },
+            {
+                name: "killall",
+                category: "Process Management",
+                description: "Kill processes by name.",
+                example: "killall firefox",
+                output: "", // Usually no output on success
+                tags: ["process", "management", "terminate"]
+            },
+            {
+                name: "pkill",
+                category: "Process Management",
+                description: "Signal processes based on name and other attributes.",
+                example: "pkill -f 'python script.py'",
+                output: "", // Usually no output on success
+                tags: ["process", "management", "terminate"]
+            },
+            {
+                name: "nice",
+                category: "Process Management",
+                description: "Run a program with modified scheduling priority.",
+                example: "nice -n 10 ./heavy-script.sh",
+                output: "", // Runs the script with lower priority
+                tags: ["process", "priority", "management"]
+            },
+            {
+                name: "renice",
+                category: "Process Management",
+                description: "Alter priority of running processes.",
+                example: "renice 5 1234",
+                output: "1234 (process ID) old priority 0, new priority 5",
+                tags: ["process", "priority", "management"]
+            },
+            {
+                name: "jobs",
+                category: "Process Management",
+                description: "List active jobs in the current shell session.",
+                example: "jobs",
+                output: "[1]  + running    ./script.sh\n[2]  - suspended  ping 8.8.8.8",
+                tags: ["process", "shell", "jobs"]
+            },
+            {
+                name: "bg / fg",
+                category: "Process Management",
+                description: "Place a job in the background / foreground.",
+                example: "bg %1",
+                output: "[1] ./script.sh &",
+                tags: ["process", "shell", "jobs"]
+            },
+            
+            // Linux Permission Commands
+            {
+                name: "chmod",
+                category: "Permissions",
+                description: "Change file mode bits (permissions).",
+                example: "chmod 755 script.sh",
+                output: "", // Usually no output on success
+                tags: ["permissions", "files", "security"]
+            },
+            {
+                name: "chown",
+                category: "Permissions",
+                description: "Change file owner and group.",
+                example: "sudo chown kali:users file.txt",
+                output: "", // Usually no output on success
+                tags: ["permissions", "ownership", "files"]
+            },
+            {
+                name: "chgrp",
+                category: "Permissions",
+                description: "Change group ownership of files.",
+                example: "sudo chgrp admin file.txt",
+                output: "", // Usually no output on success
+                tags: ["permissions", "groups", "files"]
+            },
+            {
+                name: "umask",
+                category: "Permissions",
+                description: "Set file mode creation mask.",
+                example: "umask 022",
+                output: "", // Sets default permissions for new files
+                tags: ["permissions", "default", "security"]
+            },
+            {
+                name: "getfacl",
+                category: "Permissions",
+                description: "Get file access control lists.",
+                example: "getfacl /etc/shadow",
+                output: "# file: etc/shadow\n# owner: root\n# group: shadow\nuser::rw-\ngroup::r--\nmask::r--\nother::---",
+                tags: ["permissions", "acl", "advanced"]
+            },
+            {
+                name: "setfacl",
+                category: "Permissions",
+                description: "Set file access control lists.",
+                example: "setfacl -m u:newuser:rw file.txt",
+                output: "", // Usually no output on success
+                tags: ["permissions", "acl", "advanced"]
+            },
+            {
+                name: "stat",
+                category: "Permissions",
+                description: "Display file or file system status including permissions.",
+                example: "stat /etc/passwd",
+                output: "  File: /etc/passwd\n  Size: 2913       Blocks: 8          IO Block: 4096   regular file\nDevice: 8,1   Inode: 1572868     Links: 1\nAccess: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)",
+                tags: ["permissions", "files", "info"]
+            },
+            
+            // Network Management Commands
+            {
+                name: "ifconfig / ip",
+                category: "Networking",
+                description: "Configure network interface parameters.",
+                example: "ip addr show",
+                output: "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000\n    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00\n    inet 127.0.0.1/8 scope host lo\n2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000\n    link/ether 00:0c:29:4a:b3:7c brd ff:ff:ff:ff:ff:ff\n    inet 192.168.1.105/24 brd 192.168.1.255 scope global dynamic eth0",
+                tags: ["network", "interface", "configuration"]
+            },
+            {
+                name: "netstat / ss",
+                category: "Networking",
+                description: "Display network connections, routing tables, interface statistics.",
+                example: "ss -tulpn",
+                output: "Netid  State   Recv-Q  Send-Q  Local Address:Port  Peer Address:Port Process\ntcp    LISTEN  0       128     0.0.0.0:22           0.0.0.0:*      users:(('sshd',pid=1254,fd=3))\ntcp    LISTEN  0       128     127.0.0.1:631        0.0.0.0:*      users:(('cupsd',pid=987,fd=7))",
+                tags: ["network", "connections", "ports"]
+            },
+            {
+                name: "ping",
+                category: "Networking",
+                description: "Send ICMP ECHO_REQUEST to network hosts.",
+                example: "ping -c 4 google.com",
+                output: "PING google.com (142.250.185.14) 56(84) bytes of data.\n64 bytes from lga34s32-in-f14.1e100.net (142.250.185.14): icmp_seq=1 ttl=118 time=12.3 ms\n64 bytes from lga34s32-in-f14.1e100.net (142.250.185.14): icmp_seq=2 ttl=118 time=11.8 ms",
+                tags: ["network", "connectivity", "testing"]
+            },
+            {
+                name: "traceroute",
+                category: "Networking",
+                description: "Print the route packets take to network host.",
+                example: "traceroute google.com",
+                output: "traceroute to google.com (142.250.185.14), 30 hops max, 60 byte packets\n 1  router.local (192.168.1.1)  1.234 ms  1.123 ms  1.098 ms\n 2  10.0.0.1 (10.0.0.1)  5.678 ms  5.543 ms  5.498 ms\n 3  96.120.12.101 (96.120.12.101)  12.345 ms  12.210 ms  12.198 ms",
+                tags: ["network", "routing", "diagnostics"]
+            },
+            {
+                name: "dig",
+                category: "Networking",
+                description: "DNS lookup utility.",
+                example: "dig google.com",
+                output: "; <<>> DiG 9.16.1-Ubuntu <<>> google.com\n;; global options: +cmd\n;; Got answer:\n;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12345\n;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1\n\n;; ANSWER SECTION:\ngoogle.com.     299 IN  A   142.250.185.14",
+                tags: ["network", "dns", "lookup"]
+            },
+            {
+                name: "nslookup",
+                category: "Networking",
+                description: "Query Internet name servers interactively.",
+                example: "nslookup google.com",
+                output: "Server:     192.168.1.1\nAddress:    192.168.1.1#53\n\nNon-authoritative answer:\nName:   google.com\nAddress: 142.250.185.14",
+                tags: ["network", "dns", "lookup"]
+            },
+            {
+                name: "route",
+                category: "Networking",
+                description: "Show / manipulate the IP routing table.",
+                example: "route -n",
+                output: "Kernel IP routing table\nDestination     Gateway         Genmask         Flags Metric Ref    Use Iface\n0.0.0.0         192.168.1.1     0.0.0.0         UG    100    0        0 eth0\n192.168.1.0     0.0.0.0         255.255.255.0   U     100    0        0 eth0",
+                tags: ["network", "routing", "table"]
+            },
+            {
+                name: "iptables",
+                category: "Networking",
+                description: "Administration tool for IPv4 packet filtering and NAT.",
+                example: "sudo iptables -L -n -v",
+                output: "Chain INPUT (policy ACCEPT 0 packets, 0 bytes)\n pkts bytes target     prot opt in     out     source               destination\n 1234 98765 ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED",
+                tags: ["network", "firewall", "security"]
+            },
+            {
+                name: "tcpdump",
+                category: "Networking",
+                description: "Dump traffic on a network.",
+                example: "sudo tcpdump -i eth0 -n",
+                output: "11:45:30.123456 IP 192.168.1.105.45678 > 142.250.185.14.443: Flags [P.], seq 123:456, ack 789, win 1024, options [nop,nop,TS val 1234567 ecr 0], length 333",
+                tags: ["network", "packet", "sniffing"]
+            },
+            
+            // File & Text Search Commands
+            {
+                name: "find",
+                category: "File Operations",
+                description: "Search for files in a directory hierarchy.",
+                example: "find /home -name '*.txt' -type f",
+                output: "/home/kali/document.txt\n/home/kali/notes.txt\n/home/kali/backup/data.txt",
+                tags: ["files", "search", "find"]
+            },
+            {
+                name: "grep",
+                category: "Text Processing",
+                description: "Print lines matching a pattern.",
+                example: "grep -r 'password' /etc/ 2>/dev/null | head -5",
+                output: "/etc/pam.d/common-password:password [success=1 default=ignore] pam_unix.so obscure sha512\n/etc/mysql/debian.cnf:password = secret123",
+                tags: ["text", "search", "pattern"]
+            },
+            {
+                name: "locate",
+                category: "File Operations",
+                description: "Find files by name (uses pre-built database).",
+                example: "locate passwd",
+                output: "/etc/passwd\n/etc/passwd-\n/etc/pam.d/passwd\n/usr/bin/passwd\n/usr/share/bash-completion/completions/passwd",
+                tags: ["files", "search", "fast"]
+            },
+            {
+                name: "which",
+                category: "File Operations",
+                description: "Locate a command executable in PATH.",
+                example: "which python3",
+                output: "/usr/bin/python3",
+                tags: ["files", "path", "executable"]
+            },
+            {
+                name: "whereis",
+                category: "File Operations",
+                description: "Locate binary, source, and manual page files for a command.",
+                example: "whereis python3",
+                output: "python3: /usr/bin/python3 /usr/lib/python3 /etc/python3 /usr/share/python3 /usr/share/man/man1/python3.1.gz",
+                tags: ["files", "search", "command"]
+            },
+            {
+                name: "awk",
+                category: "Text Processing",
+                description: "Pattern scanning and processing language.",
+                example: "ps aux | awk '{print $1, $2, $11}' | head -5",
+                output: "USER PID COMMAND\nroot 1 /sbin/init\nroot 2 [kthreadd]\nroot 3 [rcu_gp]\nroot 4 [rcu_par_gp]",
+                tags: ["text", "processing", "advanced"]
+            },
+            {
+                name: "sed",
+                category: "Text Processing",
+                description: "Stream editor for filtering and transforming text.",
+                example: "echo 'Hello World' | sed 's/World/Kali Linux/'",
+                output: "Hello Kali Linux",
+                tags: ["text", "processing", "transform"]
+            },
+            {
+                name: "sort",
+                category: "Text Processing",
+                description: "Sort lines of text files.",
+                example: "cat file.txt | sort -u",
+                output: "(Sorted unique lines from file.txt)",
+                tags: ["text", "sort", "processing"]
+            },
+            {
+                name: "uniq",
+                category: "Text Processing",
+                description: "Report or omit repeated lines.",
+                example: "sort file.txt | uniq -c",
+                output: "3 line1\n1 line2\n2 line3",
+                tags: ["text", "unique", "processing"]
+            }
+        ];
+
+        // ===== PRACTICAL LABS DATABASE =====
+        const practicalLabs = [
+            {
+                id: "lab-1",
+                title: "System Information Enumeration",
+                icon: "fa-desktop",
+                description: "Gather comprehensive system information to understand your target environment.",
+                tasks: [
+                    "Run 'uname -a' to get kernel version and architecture",
+                    "Execute 'cat /etc/os-release' for OS details",
+                    "Use 'hostname' and 'hostname -I' to identify the system",
+                    "Check 'whoami' and 'id' for current user context",
+                    "Run 'last reboot' to see system uptime history",
+                    "Use 'w' to see logged-in users and their activities"
+                ],
+                commands: ["uname", "cat", "hostname", "whoami", "id", "last", "w"],
+                difficulty: "Beginner"
+            },
+            {
+                id: "lab-2",
+                title: "Hardware Discovery & Analysis",
+                icon: "fa-microchip",
+                description: "Identify and document hardware components of the target system.",
+                tasks: [
+                    "Run 'lscpu' to gather CPU information",
+                    "Execute 'lsblk' to list disks and partitions",
+                    "Use 'free -h' to check memory usage",
+                    "Run 'df -h' to analyze disk space",
+                    "Try 'sudo lshw -short' for detailed hardware (requires sudo)",
+                    "Check 'lsusb' and 'lspci' for connected devices"
+                ],
+                commands: ["lscpu", "lsblk", "free", "df", "lshw", "lsusb", "lspci"],
+                difficulty: "Beginner"
+            },
+            {
+                id: "lab-3",
+                title: "User & Permission Management",
+                icon: "fa-user-lock",
+                description: "Master user account management and file permission controls.",
+                tasks: [
+                    "Create a new user with 'sudo adduser testuser'",
+                    "Check user details with 'id testuser'",
+                    "Modify file permissions with 'chmod 755 script.sh'",
+                    "Change file ownership with 'sudo chown testuser file.txt'",
+                    "Set default permissions with 'umask 027'",
+                    "Remove the test user with 'sudo userdel -r testuser'"
+                ],
+                commands: ["adduser", "id", "chmod", "chown", "umask", "userdel"],
+                difficulty: "Intermediate"
+            },
+            {
+                id: "lab-4",
+                title: "Process Management & Monitoring",
+                icon: "fa-tasks",
+                description: "Learn to monitor and control running processes effectively.",
+                tasks: [
+                    "Use 'ps aux' to view all running processes",
+                    "Launch 'htop' for interactive process monitoring",
+                    "Start a background process with 'sleep 300 &'",
+                    "Manage jobs with 'jobs', 'bg', and 'fg'",
+                    "Send signals to processes with 'kill' and 'pkill'",
+                    "Change process priority with 'nice' and 'renice'"
+                ],
+                commands: ["ps", "htop", "jobs", "bg", "fg", "kill", "pkill", "nice", "renice"],
+                difficulty: "Intermediate"
+            },
+            {
+                id: "lab-5",
+                title: "Network Reconnaissance",
+                icon: "fa-network-wired",
+                description: "Perform network discovery and service enumeration.",
+                tasks: [
+                    "Check network interfaces with 'ip addr show'",
+                    "Scan for open ports with 'ss -tulpn'",
+                    "Test connectivity with 'ping -c 4 8.8.8.8'",
+                    "Trace network path with 'traceroute google.com'",
+                    "Perform DNS lookups with 'dig kali.org'",
+                    "Examine routing table with 'route -n'"
+                ],
+                commands: ["ip", "ss", "ping", "traceroute", "dig", "route"],
+                difficulty: "Intermediate"
+            },
+            {
+                id: "lab-6",
+                title: "File System Exploration",
+                icon: "fa-search",
+                description: "Master file searching and text processing techniques.",
+                tasks: [
+                    "Find files by name with 'find / -type f -name *.conf 2>/dev/null | head -10'",
+                    "Search for text patterns with 'grep -r \"password\" /etc/ 2>/dev/null | head -5'",
+                    "Use 'locate' to quickly find files (run 'sudo updatedb' first if needed)",
+                    "Process text with 'awk' to extract specific columns from command output",
+                    "Transform text with 'sed' to modify file contents",
+                    "Sort and filter unique lines with 'sort' and 'uniq'"
+                ],
+                commands: ["find", "grep", "locate", "awk", "sed", "sort", "uniq"],
+                difficulty: "Advanced"
+            }
+        ];
+
+        // ===== PAGE NAVIGATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start typing effect
+            setTimeout(typeWriter, 500);
+            
+            // Initialize commands display
+            renderCommands(6);
+            
+            // Initialize labs display
+            renderLabs();
+            
+            // Setup page navigation
+            setupNavigation();
+            
+            // Setup boot process interaction
+            setupBootProcess();
+            
+            // Setup progress tracking
+            updateProgress();
+            
+            // Setup search functionality
+            setupSearch();
+            
+            // Add scroll effect to header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.style.backgroundColor = 'rgba(5, 5, 5, 0.98)';
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.7)';
+                } else {
+                    header.style.backgroundColor = 'rgba(5, 5, 5, 0.97)';
+                    header.style.boxShadow = '0 5px 30px rgba(0, 0, 0, 0.5)';
+                }
+            });
+            
+            // Initialize matrix effect
+            createMatrixEffect();
+        });
+
+        // ===== SETUP FUNCTIONS =====
+        function setupNavigation() {
+            // Page navigation
+            document.querySelectorAll('.nav-links a, .footer-links a, .btn[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    
+                    if (pageId) {
+                        // Close mobile menu if open
+                        document.querySelector('.nav-links').classList.remove('active');
+                        document.querySelector('#mobile-menu i').classList.add('fa-bars');
+                        document.querySelector('#mobile-menu i').classList.remove('fa-times');
+                        
+                        // Switch to selected page
+                        switchPage(pageId);
+                        
+                        // Update active nav link
+                        document.querySelectorAll('.nav-links a').forEach(navLink => {
+                            navLink.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            document.getElementById('mobile-menu').addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.toggle('active');
+                this.querySelector('i').classList.toggle('fa-bars');
+                this.querySelector('i').classList.toggle('fa-times');
+            });
+            
+            // Logo click returns to home
+            document.querySelector('.logo').addEventListener('click', function(e) {
+                e.preventDefault();
+                switchPage('home');
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                document.querySelector('.nav-links a[data-page="home"]').classList.add('active');
+            });
+        }
+        
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Special initialization for certain pages
+            if (pageId === 'commands') {
+                // Reset and render commands when switching to commands page
+                visibleCommands = 6;
+                renderCommands(visibleCommands);
+                document.getElementById('load-more-commands').style.display = 'block';
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function setupBootProcess() {
+            document.querySelectorAll('.boot-stage').forEach(stage => {
+                stage.addEventListener('click', function() {
+                    // Close all other stages
+                    document.querySelectorAll('.boot-stage').forEach(s => {
+                        if (s !== this) {
+                            s.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current stage
+                    this.classList.toggle('active');
+                });
+            });
+        }
+        
+        function setupSearch() {
+            const searchBox = document.getElementById('command-search');
+            if (searchBox) {
+                searchBox.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    filterCommands(searchTerm);
+                });
+            }
+        }
+        
+        // ===== COMMAND RENDERING =====
+        let visibleCommands = 6;
+        
+        function renderCommands(count) {
+            const container = document.getElementById('commands-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const limit = Math.min(count, kaliCommands.length);
+            
+            for (let i = 0; i < limit; i++) {
+                const command = kaliCommands[i];
+                const commandElement = document.createElement('div');
+                commandElement.className = 'command-card';
+                commandElement.setAttribute('data-tags', command.tags.join(' '));
+                commandElement.innerHTML = `
+                    <div class="command-header">
+                        <h3>${command.name}</h3>
+                        <span class="command-category">${command.category}</span>
+                    </div>
+                    <p class="command-desc">${command.description}</p>
+                    <div class="command-example">
+                        <code>${command.example}</code>
+                        <button class="copy-btn" data-text="${command.example.replace(/"/g, '&quot;')}">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <button class="show-output">Show Output</button>
+                    <div class="command-output">
+                        <code>${command.output}</code>
+                    </div>
+                `;
+                container.appendChild(commandElement);
+            }
+            
+            // Attach event listeners to new elements
+            attachCommandEventListeners();
+            
+            // Update load more button
+            const loadMoreBtn = document.getElementById('load-more-commands');
+            if (loadMoreBtn) {
+                if (visibleCommands >= kaliCommands.length) {
+                    loadMoreBtn.style.display = 'none';
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                }
+            }
+        }
+        
+        function attachCommandEventListeners() {
+            // Copy button functionality
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const textToCopy = this.getAttribute('data-text');
+                    copyToClipboard(textToCopy, this);
+                });
+            });
+            
+            // Show output toggle
+            document.querySelectorAll('.show-output').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const outputDiv = this.nextElementSibling;
+                    if (outputDiv.style.display === 'block') {
+                        outputDiv.style.display = 'none';
+                        this.textContent = 'Show Output';
+                    } else {
+                        outputDiv.style.display = 'block';
+                        this.textContent = 'Hide Output';
+                    }
+                });
+            });
+        }
+        
+        function filterCommands(searchTerm) {
+            const commandCards = document.querySelectorAll('.command-card');
+            
+            commandCards.forEach(card => {
+                const tags = card.getAttribute('data-tags').toLowerCase();
+                const commandName = card.querySelector('h3').textContent.toLowerCase();
+                const commandDesc = card.querySelector('.command-desc').textContent.toLowerCase();
+                const commandCategory = card.querySelector('.command-category').textContent.toLowerCase();
+                
+                if (searchTerm === '' || 
+                    commandName.includes(searchTerm) || 
+                    commandDesc.includes(searchTerm) || 
+                    commandCategory.includes(searchTerm) ||
+                    tags.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // ===== LABS RENDERING =====
+        function renderLabs() {
+            const container = document.getElementById('labs-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Load completion status from localStorage
+            let labProgress = JSON.parse(localStorage.getItem('walidredops-lab-progress')) || {};
+            
+            practicalLabs.forEach(lab => {
+                const isCompleted = labProgress[lab.id] || false;
+                const labElement = document.createElement('div');
+                labElement.className = 'lab-card';
+                labElement.innerHTML = `
+                    <div class="lab-title">
+                        <i class="fas ${lab.icon}"></i>
+                        ${lab.title}
+                        <span style="margin-left: auto; font-size: 0.8rem; color: ${lab.difficulty === 'Beginner' ? 'var(--hacker-green)' : lab.difficulty === 'Intermediate' ? 'var(--hacker-cyan)' : 'var(--hacker-purple)'}">
+                            ${lab.difficulty}
+                        </span>
+                    </div>
+                    <p class="lab-desc">${lab.description}</p>
+                    <div class="lab-tasks">
+                        ${lab.tasks.map(task => `<div class="lab-task">${task}</div>`).join('')}
+                    </div>
+                    <div class="lab-checkbox">
+                        <input type="checkbox" id="${lab.id}" ${isCompleted ? 'checked' : ''}>
+                        <label for="${lab.id}">Mark as completed</label>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 0.85rem; color: #888;">
+                        <i class="fas fa-terminal"></i> Commands: ${lab.commands.join(', ')}
+                    </div>
+                `;
+                container.appendChild(labElement);
+            });
+            
+            // Attach checkbox event listeners
+            document.querySelectorAll('.lab-checkbox input').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const labId = this.id;
+                    let labProgress = JSON.parse(localStorage.getItem('walidredops-lab-progress')) || {};
+                    labProgress[labId] = this.checked;
+                    localStorage.setItem('walidredops-lab-progress', JSON.stringify(labProgress));
+                    
+                    // Update progress
+                    updateProgress();
+                });
+            });
+        }
+        
+        // ===== PROGRESS TRACKING =====
+        function updateProgress() {
+            const labProgress = JSON.parse(localStorage.getItem('walidredops-lab-progress')) || {};
+            const totalLabs = practicalLabs.length;
+            const completedLabs = Object.values(labProgress).filter(v => v).length;
+            const progressPercent = totalLabs > 0 ? Math.round((completedLabs / totalLabs) * 100) : 0;
+            
+            // Update progress bar
+            const progressFill = document.getElementById('progress-fill');
+            const progressPercentText = document.getElementById('progress-percent');
+            
+            if (progressFill && progressPercentText) {
+                progressFill.style.width = `${progressPercent}%`;
+                progressPercentText.textContent = `${progressPercent}%`;
+            }
+        }
+        
+        // ===== UTILITY FUNCTIONS =====
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show feedback
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.backgroundColor = 'rgba(0, 255, 0, 0.3)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                button.innerHTML = '<i class="fas fa-times"></i> Error';
+                button.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.backgroundColor = '';
+                }, 2000);
+            });
+        }
+        
+        // ===== LOAD MORE COMMANDS =====
+        document.getElementById('load-more-commands')?.addEventListener('click', function() {
+            visibleCommands += 6;
+            renderCommands(visibleCommands);
+        });
+        
+        // ===== MATRIX RAIN EFFECT =====
+        function createMatrixEffect() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '-1';
+            canvas.style.opacity = '0.03';
+            
+            document.body.appendChild(canvas);
+            
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            
+            const chars = "01";
+            const charArray = chars.split("");
+            const fontSize = 12;
+            const columns = width / fontSize;
+            const drops = [];
+            
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * height;
+            }
+            
+            function drawMatrix() {
+                ctx.fillStyle = "rgba(5, 5, 5, 0.04)";
+                ctx.fillRect(0, 0, width, height);
+                
+                ctx.fillStyle = "#0F0";
+                ctx.font = `${fontSize}px monospace`;
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = charArray[Math.floor(Math.random() * charArray.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            let matrixInterval = setInterval(drawMatrix, 40);
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                clearInterval(matrixInterval);
+                
+                // Reinitialize drops array
+                for (let i = 0; i < columns; i++) {
+                    drops[i] = Math.random() * height;
+                }
+                
+                matrixInterval = setInterval(drawMatrix, 40);
+            });
+        }
+    </script>
+</body>
+</html>
